@@ -1,0 +1,267 @@
+purpose
+
+oct 2026
+
+01
+
+i may create a math lib for js.
+
+why not. why not now.
+
+03
+
+on web/map, seems i should silence warning (react array children wo key) instead. i dont have to.
+
+<!-- i may simply delete the web/map file, redirect web globals directly to map, check and silence that specific error (warning). -->
+
+on std: is, i may see bigint as (subset of) number. no idea if matters. <!-- or i may call it numeric. -->
+
+---
+
+well, seems it would be merely polymorphism on min and max.
+
+std math fn doesnt feel flawed.
+
+---
+
+std::is: support iterable and numeric.
+
+---
+
+let's introduce some fp methods to std.
+
+some of them are already available via array prototype, but i dont like that.
+
+04
+
+yeah, file. shell.
+
+work as if you ctrl alt t.
+
+i build what i need.
+
+components of a design system. maybe like adw. just to specify.
+
+---
+
+look at the py builtins. and ruby builtins maybe.
+
+how would i convert types, yeah maybe ive eliminated nan (ok i will see nil as nan).
+
+like parseint? array from? string from? new constructor? here inconsistent.
+
+and i do need to, in case js sees + as string concat via some magic rules. and i could not override op <!-- i mean infix, not prefix --> cleanly.
+
+---
+
+i may not need the fp methods right now.
+
+---
+
+file. shell.
+
+"launch"
+
+maybe i would fix what's flawed first. they are existing deps. i need them.
+
+---
+
+yeah but it itself will rely on fs and terminal anyway if i want to do it cleanly (shell is quirky).
+
+feels i would learn from py and rb, not go/rust (bounded by low level stuff no matter how you abstract or sweeten).
+
+let's design a bit.
+
+- launch by systemd (config normally, like after network maybe well anyway)
+- read a config file, parse yaml
+- for each app
+  - create a normal terminal, as if ctrl alt t
+  - generate free port if needed, modify caddyfile then
+  - run command as long running daemon 
+  - constantly collect logs, like stdout/stderr or exit
+  - save log for each, on fs maybe. just separate and incremental. avoid yaml overhead.
+- modify caddyfile, restart caddy
+
+i may learn how to use caddy. (or caddyfile syntax is all i need)
+
+and i would have a separate server. well doesnt matter. it's app specific.
+
+it will route api to api, and anything else to the spa build.
+
+---
+
+file op can be sync. dx matters more than perf. <!-- and yeah, async should be preferrably handled automatically under the hood -->
+
+about shell, it can be sync to run a command and get its result. it's on backend right? and on frontend, if it takes time and you wanna display some placeholder, you may "use async". network requests are inherently async. and you could not run shell commands on web.
+
+for long running daemon, it doesnt matter sync/async. it's basically traditional event listeners.
+
+05
+
+i may list the methods and leverage llm.
+
+---
+
+rest params `...` are common. i may have a util to polymorph it, i.e. `fn(...args)` `fn(arr)` when each individual arg must not be iterable (or at least there's no ambiguity when only one arg is passed). <!-- btw, math lib is different as it accepts an optional `fn` alongside -->
+
+would `list` already solve this? how does array.from work?
+
+btw, the naming of `list` might conflict, but that's not the case (classic lisp1/lisp2 divide when fn and var are the same word in verb/noun). i would generally prefer more concise std lib fn.
+
+it makes no sense to have map fn arg, if map itself could already be applied to any iterables in stl.
+
+> JavaScript had historical baggage.
+>
+> Python was designed for readability from day one.
+
+---
+
+i will adopt pathname rather than fileutils, as recommended.
+
+---
+
+thanks to js, iterators and arrays are of polymorphism (constrast to ruby entries/each_entry)
+
+06
+
+maybe i would name it as subprocess, not shell. doesnt matter much. just feels it's an easier choice.
+
+07
+
+nodejs subprocess spawn has 20 overloads.
+
+---
+
+ah... yeah, you should trim the stdout. saves my day.
+
+---
+
+most time they leave a trailing newline, but rarely do they prefix, or leave trailing spaces.
+
+yeah, it would "ignore spaces after lineend and newlines after eof", but that's not the case.
+
+maybe a blank trim would be overkill. or does it matter.
+
+guess i would not have an option for this. it's a pragmatic abstraction and neither do i wanna leave nonsensical (trailing newline is compromise to terminal printing for humans, not scripts) content either. if it leaks let it leak.
+
+---
+
+in practice you would almost never see string as iterable.
+
+primitive could not be iterable.
+
+08
+
+yeah.
+
+have an cli abstraction.
+
+---
+
+the more assumptions/currying/conventions you make, the simpler the code would be.
+
+i can absolutely solve a specific problem if eventually i will have my consistent style.
+
+---
+
+but a childprocess could not really command its parent.
+
+09
+
+23 40 file: support with_dir option, default to true, like ruby.
+
+11
+
+03 00 log: separate pure logic, format log.
+
+deprecate log_fs.
+
+> Functions should be defined generally. Squaring is not in the Python Library precisely because it is a special case of the pow function, which raises numbers to arbitrary powers.
+
+and it should be ideally pure.
+
+16 00 std/is: fix if order.
+
+in turn fix std/list.
+
+12
+
+yeah, you invent dsl for time formatting pattern, even though it's conceptually <!-- should be --> (proxy) dc and template literal.
+
+because engineering is the art of making tradeoffs.
+
+<!-- i would not adopt "YYYY" because it's prone and ugly, and idk how it even works (e.g. for complex strings or edge cases). and, it does _not_ just inherently gurantee you better internalization. -->
+
+13
+
+it's a bit awkward to make it chainable when you have no first class fp piping.
+
+anyway, i can try.
+
+---
+
+```
+  const timezone_sign = offset_min <= 0 ? '+' : '-'
+```
+
+brilliant isnt it.
+
+yeah, it doesnt even hallucinate anything.
+
+14
+
+idk how i would do styling.
+
+css, which we are familiar w, is flawed on dx. i may invent some dsl.
+
+i might not need best possible intellisense or ide features/integration in general. like how often do i batch rename? and if i do not declare in order, autocomplete matters less even if things are coupled.
+
+it has to be coupled. if you can switch behavior on sth fixed, there definitely _will_ be some adapter somewhere.
+
+---
+
+on server, i guess it's basically a wrapper. i can test it.
+
+but how would i handle like timeout or retry?
+
+15
+
+the current way of managing deps is extremely ugly.
+
+i should standardize before making progress.
+
+> how to publish and update npm lib on github, and add and upgrade via bun
+
+or maybe it's just a line of tsconfig, if im confortable w the monorepo.
+
+---
+
+yeah, it's hacky anyway, and i run into a hard wall: node modules resolve upward.
+
+react could not work w conflicting versions in runtime. peer deps would not work this way.
+
+it also reveals problems. it's coupled w "web/component/icon" and "toast" to avoid boilerplate (e.g. import, export, init) at extreme danger.
+
+i may just go the standard way.
+
+- it should be able to be published separately
+- for local dev, i can really modify inside node modules, and build abstractions maybe on this workflow
+
+---
+
+finally, sanity.
+
+- use a flat bundler (e.g. bun) <!-- or npm/yarn, but not pnpm -->
+- declare deps and peerdeps normally
+- copy to node modules of the consumer project, and _explicitly remove react and react-dom_ (it's only them that force singleton)
+- decouple tsconfig links to the consumer project. import and init explicitly instead.
+- you may automate it,
+  - track lib on an external git folder, publish to github, add as deps
+  - when install, peer deps will be respected normally, and i guess you would not see "react" (or at least on behavior it will resolve normally)
+  - when you dev locally rapidly, to update lib, you may
+    - update to git, push to github
+    - _no need to sync via network request_
+    - hardcode a list of consumers, drop react and react dom first (if existing) and copy everywhere (all projects use react, i have it on template)
+    - you can test lib normally, as you can never run react in terminal, and i have no web test
+
+
