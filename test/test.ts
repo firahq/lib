@@ -1,12 +1,10 @@
-import { format, now } from "lib/time"
+// log('a' in ['a', 'b', 'c'])
+// log(['a', 'b', 'c'].includes('a'))
 
-function log_time() {
-  return now().format('%F %T%:z')
-  // return format(now(), '%F %T%:z')
+for (const [key, value] of entries([1,2,3])) {
+  log(key, value)
 }
 
-log(log_time())
-
-log(now().get_utc().format())
-
-log(now().get_local(10000).format())
+for (const [key, value] of Object.entries([1,2,3])) {
+  log(key, value)
+}
