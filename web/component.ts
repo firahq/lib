@@ -8,7 +8,15 @@ export function structure(component = 'app', tag = 'div') {
         return (...args) => {
           const { props, children } = parse(...args)
 
-          props.class = class_name
+          if (has(props, 'className')) {
+            if (is(props.className, 'array')) {
+              props.className.push[class_name]
+            } else {
+              props.className = [props.className, class_name]
+            } 
+          } else {
+            props.className = class_name
+          } 
 
           return h(tag, props, ...children)
         }
@@ -20,7 +28,7 @@ export function structure(component = 'app', tag = 'div') {
 const children_symbol = Symbol()
 
 function h(tag, props, ...children) {
-  props = p(props)
+  // props = p(props)
 
   if (is(tag, 'string') && has(props, 'html')) {
     props.dangerouslySetInnerHTML = { __html: props.html }
@@ -36,11 +44,13 @@ function parse(...args) {
   let props = {},
     children = []
 
-  if (is(arg[0], 'object') && !has(arg[0], children_symbol)) {
-    ;[props, ...children] = arg
+  if (is(args[0], 'object') && !has(args[0], children_symbol)) {
+    ;[props, ...children] = args
   } else {
-    children = arg
+    children = args
   }
+
+  props = p(props)
 
   return { props, children }
 }
