@@ -288,4 +288,46 @@ tbh you should never get w payload. actually you should never get.
 
 all abstraction leaks, and i can have specific methods, like for backend service integration, in the future.
 
+30
+
+```ts
+type state<T> = {
+  persist?: string
+  version?: string
+  should_migrate?: fn
+  sync_url_options?: {
+    should_sync_url?: boolean
+    should_apply_all_given_params?: boolean
+    should_cleanup_omitted_params_after_init?: boolean
+    should_sync_after_init?: boolean
+    keys_to_sync?: (keyof T)[] | Set<keyof T>
+    param_mapping?: Record<string, keyof T>
+    path_mapping?: keyof T
+  },
+  init?: (state: T) => void,
+  change?: (state: T) => void
+}
+```
+
+how complicated is that, despite seemingly self explantory names.
+
+i dont really wanna use it.
+
+```ts
+   function does_type_mismatch(old_value: any, new_value: any) {
+      return (
+        typeof old_value == "boolean" &&
+        typeof new_value != "boolean" &&
+        typeof new_value != "function"
+      );
+    }
+
+    const toggle = (v: boolean) => !v;
+    const new_value =
+      args.length == 0 || does_type_mismatch(data, args[0]) ? toggle : args[0];
+```
+
+how awkward. it might provide better dx on certain scenarios, but just how awkward.
+it shouldnt be fixed here.
+
 

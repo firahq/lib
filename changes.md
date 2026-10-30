@@ -11,3 +11,8 @@ change
 - file/append: touch if non existing
 - request: add `post`
 
+# 2026.10.30
+
+- subprocess: fix cwd no effect when userspace hack is on
+- web/state: overhaul the overly complicated `state`, have an atomic `s` instead
+- web/component: + `structure(tag?)`
