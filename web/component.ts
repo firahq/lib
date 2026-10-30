@@ -9,11 +9,7 @@ export function structure(component = 'app', tag = 'div') {
           const { props, children } = parse(...args)
 
           if (has(props, 'className')) {
-            if (is(props.className, 'array')) {
-              props.className.push[class_name]
-            } else {
-              props.className = [props.className, class_name]
-            } 
+            props.className += class_name
           } else {
             props.className = class_name
           } 
@@ -25,13 +21,14 @@ export function structure(component = 'app', tag = 'div') {
   )
 }
 
-const children_symbol = Symbol()
+// const children_symbol = Symbol()
 
 function h(tag, props, ...children) {
   // props = p(props)
 
   if (is(tag, 'string') && has(props, 'html')) {
     props.dangerouslySetInnerHTML = { __html: props.html }
+    props.html = nil
   } 
 
   const result = createElement(tag, props, ...children)
