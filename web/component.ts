@@ -9,7 +9,7 @@ export function structure(component = 'app', tag = 'div') {
           const { props, children } = parse(...args)
 
           if (has(props, 'className')) {
-            props.className += class_name
+            props.className += ` ${class_name}`
           } else {
             props.className = class_name
           } 
