@@ -1,4 +1,4 @@
-export function structure(component = 'app', tag = 'div') {
+export function structure(component = 'app', tag = 'div') {  
   return new Proxy(
     {},
     {
@@ -35,7 +35,7 @@ function h(tag, props, ...children) {
   } 
 
   const result = createElement(tag, props, ...children)
-  result[children_symbol] = true
+  // result[children_symbol] = true
 
   return result
 }
@@ -44,7 +44,8 @@ function parse(...args) {
   let props = {},
     children = []
 
-  if (is(args[0], 'object') && !has(args[0], children_symbol)) {
+  // if (is(args[0], 'object') && !has(args[0], children_symbol)) {
+  if (is(args[0], 'object') && !(args[0].$$typeof == Symbol.for('react.element'))) {
     ;[props, ...children] = args
   } else {
     children = args
