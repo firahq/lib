@@ -346,6 +346,196 @@ alternatively, you make ahve
 
 it's the same.
 
+nov 2026
+
+01
+
+clearly i could go the idiomatic way, or one of the common abstractions, each w their distinct tradeoffs.
+
+i dont like it. i dont like jsx.
+
+but idk if it's really worth it... it helps to see it clearer.
+
+perf is generally negligible. import boilerplate can be omitted by some clean hacks.
+
+```
+ef app
+  r (
+    <div className="..." foo={foo} bar={bar}>
+      <Input/>
+      {
+        map(items, afn item (
+          <div className="item">
+            item
+          </div>
+        ))
+      }
+    </div>
+  )
+```
+
+```
+ef app
+  r (
+    <div {...props({class: 'app', foo, bar})}>
+      <Input/>
+      {
+        map(items, afn item (
+          <div className="item">
+            item
+          </div>
+        ))
+      }
+    </div>
+  )
+```
+
+```
+ef app
+  r h('.foo', {foo, bar}, 
+    h(input, ...),
+    # h('input'),
+    h('.item')
+  )
+```
+
+```
+f app
+  dc foo, item = structure app
+  # dc input = structure app input
+
+  r foo(
+    {foo, bar},
+    input(...),
+    item(...)
+  )
+
+app = component app # or it will be eager evaluated, breaking rules of hooks
+
+e {app}
+
+f input
+  dc input = structure input
+
+  r input(
+    {value, change, ...props}
+  )
+
+input = component input
+
+e input
+```
+
+---
+
+conclusion.
+
+you dont like jsx. so you will need a constructer of some kind.
+
+that's `h`.
+
+you want them to be component scoped. and you dont wanna hack css (e.g. `.inside the right component {:not(inside another .component) ...}`, or via some js listener based css `mutation observer`). and you dont wanna style based css (e.g. `component_stylehash` or `px-2 styles themselves wo naming`). you want them to be named, to be clear, self explanatory, and extensible later (though that rarely yields real utility or roi for fast paced startups).
+
+and you would take a simple approach. `app_foo` `app_bar`.
+
+you had an idea.
+
+```
+foo bar = prefix app # or structure app
+
+r h(foo, ..., ...) # or r foo(..., ...)
+```
+
+let's see how well it works. let's compare.
+
+```
+r h("app_foo", ..., ...)
+```
+
+you really avoids typing app via proxy hack. but now you type foo again. yeah you have autocomplete because foo is a variable now but just... and typically you would not come up w the whole picture initially, that is you might jump between structure and reference of such class to add an element.
+
+well, dont over do that. dx maxxing.
+
+and, yeah, it made `foo(..., ...)` possible.
+
+but what about components? you could not reliably call them directly, which would break the rule of hooks. so you
+
+```
+fn app
+
+app = component app
+
+export {app}
+
+# ...
+
+app(..., ...)
+```
+
+instead of 
+
+```
+ef app
+
+h(app, ..., ...)
+```
+
+clearly the latter is much cleaner (if you really type "app = component app yourself"), and if you really setup transpiler for such decorator, you can abstract on top of the latter aw!
+
+```
+ef app
+
+app(..., ...) # component like fn call auto wrapped
+```
+
+so the conclusion is, no `structure`, no `component`. just `h`.
+
+despite `component({props}, children...)` like syntax is largely why i favored which over jsx initially.
+
+and about h itself.
+
+`h("foo")` is never considerred text of `"foo"`. if you wanna have text, do not wrap it in `h` at all.
+
+what if you wanna have (possibly) a bunch of text as a fragment? `h(items)`. arrays are always arrays.
+
+```
+h() -> raw fragment
+h('') -> raw fragment
+h('foo') -> div.foo # yeah! i assume you will never have raw tag.
+h('.foo') -> div.foo
+h('button.foo') -> button.foo
+h(comp, props, ...children)
+
+if the first arg isnt string/fn...
+h(obj, ...) -> div, obj, ... # ~~or fragment?~~
+h(...), div, {}, ... # or fragment? yeah. fragment.
+```
+
+but what about `h('lorem', 'ipsum')`? it would not be treated as two text.
+
+well, you should do like `h('article', 'lorem', 'ipsum')` or `h('', ...)`. and more commonly you will have `h(items)`.
+
+more generally,
+
+```
+h(str/fn, obj, ...) -> tag, props, children...
+h(str/fn, ...) -> tag, {}, children...
+h(obj, ...) -> div, props, children...
+h(...) -> fragment, children...
+
+on tag, 
+'' -> fragment
+foo -> div.foo # wo .
+.foo -> div.foo
+foo. -> foo
+foo.bar -> foo.bar
+```
+
+it's considered an obj if it's not an array (excluded by modern is by default), and not a react component/element (which typically have `$$typeof`)
+
+---
+
+deprecate `component`.
 
 
 
