@@ -533,9 +533,20 @@ foo.bar -> foo.bar
 
 it's considered an obj if it's not an array (excluded by modern is by default), and not a react component/element (which typically have `$$typeof`)
 
+also, i would avoid the weird prefixed `app_app` wo any special handling. it's first `app`, and then `app_child` `app_kid` `app_boy` `app_girl`.
+
 ---
 
 deprecate `component`.
 
+---
+
+most logics of `props` should actually be moved to `hyperscript`.
+
+they are specific handling of react quirks (e.g. `classname` not strictly no `class` allowed), and should only be applied when tag is string.
+
+could have.
+
+(wait, i could entirely keep props, wo export p, and just use props on hyperscript!)
 
 
