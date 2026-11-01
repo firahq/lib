@@ -1,5 +1,11 @@
-const [folder, ...path_parts] = 'drafts/foo bar/sadf'.split('/')
+function identity(x) {
+  return (x) => x * 2
+}
 
-const path = path_parts.join('/')
+function foo(bar) {
+  return bar + 1
+}
 
-log(folder, path)
+foo = identity(foo)
+
+export { foo }
