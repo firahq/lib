@@ -90,4 +90,36 @@ i will smartly parse the utils. there are about just 120 to 140 core utils.
 
 it's manageable w/wo llms.
 
+---
+
+i may handle text tshirt sizes specially.
+
+doesnt feel there are quite a lot of style like that, unless css is severely flawed.
+
+<!-- well there are quite a lot actually, but i dont need all these -->
+
+i may do it myself. dk if it would be faster to describe it precisely to an llm. but it's reliable and predictable in the manual way.
+
+currently style is a tuple of prop and value.
+
+i may support an array of tuple.
+
+---
+
+i wanna test and see whether i could migrate existing css in para in the style lib.
+
+not much.
+
+idk how to create layout in tailwind though.
+
+and i will have use style, use effect that injects style.
+
+---
+
+in the idiomatic way, you would import a yaml for theming,
+
+and the object identity would stay the same.
+
+it's not expected to create style objects on the fly (though it's just some perf issues).
+
 
