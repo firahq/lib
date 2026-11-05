@@ -1553,8 +1553,15 @@ export function style(theme) {
     for (const [element, utility_classes] of entries(elements)) {
       // todo
       let selector = `.${component}_${element}`
-      if (component == element) {
-        selector += `, .${component}`
+      if (is_component_container_itself()) {
+        selector += `, .${element}`
+      }
+      // if (component == element) {
+      //   selector += `, .${component}`
+      // }
+
+      function is_component_container_itself() {
+        return component == element || element.startsWith(component)
       }
 
       // todo
