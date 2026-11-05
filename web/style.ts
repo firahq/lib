@@ -553,13 +553,13 @@ const glossary = {
       ['line-height', '1.25rem'],
     ],
   },
-  'text-md': {
+  'text-base': {
     style: [
       ['font-size', '1rem'],
       ['line-height', '1.5rem'],
     ],
   },
-  'text-base': {
+  'text-md': {
     style: [
       ['font-size', '1rem'],
       ['line-height', '1.5rem'],
@@ -1704,7 +1704,7 @@ export function style(theme) {
 
               function length(value) {
                 if (is_number(value)) {
-                  return `${int(value) / 4}rem`
+                  return `${float(value) / 4}rem`
                 }
 
                 return lengths[value] ?? value
