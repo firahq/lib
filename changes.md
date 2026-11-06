@@ -27,4 +27,4 @@ change
 - web/state: use url instead of url search params plus string op, fix quirks (e.g. hash disappearing)
 - web/state: ignore unchanged set state for literals
 - web/std/is: support type `literal`
-
+- web/style: support selector w commas
