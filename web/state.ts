@@ -80,7 +80,7 @@ export function s<T>(initial_value: T, options: s<T> = {}) {
     subscribe(() => {
       const url = new URL(window.location.href)
 
-      url.searchParams.set(key, serialize())
+      url.searchParams.set(url_param, serialize())
 
       window.history.pushState({}, '', url)
     })
