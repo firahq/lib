@@ -174,9 +174,16 @@ export function parse_options(options: parse_options) {
       default_value = normalized_env[key]
     }
 
-    converted_options[key] = {
-      type: type == 'boolean' ? 'boolean' : 'string',
-      default: default_value,
+    if (type == 'boolean') {
+      converted_options[key] = {
+        type,
+        default: default_value,
+      }
+    } else {
+      converted_options[key] = {
+        type: 'string',
+        default: str(default_value),
+      }
     }
 
     if (short) {

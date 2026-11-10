@@ -5,7 +5,12 @@ log(
     port: {
       type: 'number',
       short: 'p',
-      default: '8192'
+      default: 8192,
+    },
+    foo: {
+      type: 'boolean',
+      short: 'f',
+      default: false,
     },
   }),
 )
