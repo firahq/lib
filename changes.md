@@ -49,3 +49,9 @@ change
 - web/hyperscript: fix wrong div that should be fragment
 - math: fix inf recursion on min and max
   - unclean code can lead to anything
+
+# 2026.11.11
+
+- web/reset.css: ~~make textarea display block~~ make form elements vertical align middle
+  - same quirk as svg, confusing margin bottom
+  - strictly better for modern ui when you never embed form elements inside running text
