@@ -55,3 +55,10 @@ change
 - web/reset.css: ~~make textarea display block~~ make form elements vertical align middle
   - same quirk as svg, confusing margin bottom
   - strictly better for modern ui when you never embed form elements inside running text
+- web/state: consider undefined set state fn as direct mutation
+  - resolve promises
+- ~~web/component~~ web/react: + `use_state` `use_effect` `set_timeout` `set_interval` `listen(event, callback, element?)` 
+  - (remove the deprecated methods)
+  - allow direct mutation
+  - resolve promises
+  - auto cleanup
