@@ -41,7 +41,7 @@ export function use_state<T>(
     }
 
     if (is(new_state, Promise)) {
-      new_state.then((new_value) => set_state(new_value))
+      new_state.then((new_value) => set_state(() => new_value))
       return
     }
 
