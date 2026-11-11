@@ -23,29 +23,37 @@ export function use_state<T>(
   const update = use_update()
 
   function set_state(
-    new_value: T | Promise<T> | ((old_value: T) => T | Promise<T> | undefined) = toggle,
-  ) {
+    new_value: T | Promise<T> | ((old_value: T) => T | Promise<T> | undefined),
+  ): void
+
+  function set_state(...args) {
+    let new_value
+    if (args.length == 0) {
+      new_value = toggle
+    } else {
+      ;[new_value] = args
+    }
+
     let prev_state = state
-    let new_state
 
     if (is(new_value, 'function')) {
-      new_state = new_value(state)
-    } else if (!is(new_value, 'undefined')) {
-      new_state = new_value
-    } else {
+      new_value = new_value(state)
+    }
+
+    if (is(new_value, 'undefined')) {
       return
     }
 
-    if (is(new_state, 'literal') && new_state == prev_state) {
+    if (is(new_value, 'literal') && new_value == prev_state) {
       return
     }
 
-    if (is(new_state, Promise)) {
-      new_state.then((new_value) => set_state(() => new_value))
+    if (is(new_value, Promise)) {
+      new_value.then(set_state)
       return
     }
 
-    _set_state(new_state)
+    _set_state(new_value)
     update()
   }
 
