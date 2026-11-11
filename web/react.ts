@@ -52,15 +52,15 @@ function toggle(v: boolean) {
 
 let cleanups: Set<fn> = set()
 
-export function use_effect(fn, deps) {
-  useEffect(effect(fn), [JSON.stringify(deps)])
+export function use_effect(fn: fn, deps?: any[]) {
+  useEffect(effect(fn), normalize_deps(deps))
 }
 
-export function use_layout_effect(fn, deps) {
-  useLayoutEffect(effect(fn), [JSON.stringify(deps)])
+export function use_layout_effect(fn: fn, deps?: any[]) {
+  useLayoutEffect(effect(fn), normalize_deps(deps))
 }
 
-function effect(fn) {
+function effect(fn: fn) {
   return () => {
     cleanups = set()
 
@@ -84,7 +84,15 @@ function effect(fn) {
   }
 }
 
-export function set_timeout(fn, delay) {
+function normalize_deps(deps?: any[]) {
+  if (!is_given(deps)) {
+    return nil
+  } else {
+    return [JSON.stringify(deps)]
+  } 
+}
+
+export function set_timeout(fn: fn, delay: number) {
   const timer = setTimeout(fn, delay)
 
   cleanups.add(() => clearTimeout(timer))
@@ -92,7 +100,7 @@ export function set_timeout(fn, delay) {
   return timer
 }
 
-export function set_interval(fn, interval) {
+export function set_interval(fn: fn, interval: number) {
   const timer = setInterval(fn, interval)
 
   cleanups.add(() => clearInterval(timer))
