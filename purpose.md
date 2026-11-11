@@ -581,7 +581,40 @@ dk whether boolean default makes sense.
 
 feels it has to be false, unless there's some magic like "--not-foo".
 
----
+11
 
+clearly debounce doesnt have to be "use query" specific,
+
+if you ignore undefined when set state
+
+<!-- well, that might still trigger a rerender but who cares. (and you may check eq if matters, or wrap in immer.) -->
+
+- query foo = debounce post 'seaech' foo
+- when q changes, query q
+  - maintain is current and timer
+  - sto
+    - if sync, go ahead
+      - if not cleared, subsequent call will fire later
+    - if return promise
+      - r then if current r result otherwise return nil
+  - if called again
+    - clear timer
+    - not current
+    - if sto fires and resolves to promise...
+      - it will be handled
+
+i could check deep eq. alternatively, if i dont wanna make nil valid state, i could see undefined as mutation and nil as no change.
+
+wait, i have to explicitly do this. in the state lib i update state directly. but react performs hardcoded shallow eq check under the hood anyway.
+
+dont feel undefined/nil separation would work. times are you omit entirely (undefined) after mutation, or early return directly (same as undefined). very prone if you enforce a rule of nil (or special symbol) for early return.
+
+wait. i have hardcoded json stringify in all use effect. perf is trivial.
+
+so the only problem is to force set state to work. no immer or lodash needed. shadow clone will make it.
+
+ah. i dont even have to force react set state to work. it's already (whether or not) mutated under the hood. and i just need to force an update (it's hard to change the js reference only for any non literal objects in general).
+
+and it will work the same as state lib at least.
 
 
