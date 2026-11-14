@@ -501,6 +501,36 @@ const glossary = {
       ['font-weight', 'font-weight'],
     ],
   },
+  thin: {
+    style: [['font-weight', 100]],
+  },
+  extralight: {
+    style: [['font-weight', 200]],
+  },
+  light: {
+    style: [['font-weight', 300]],
+  },
+  normal: {
+    style: [['font-weight', 400]],
+  },
+  regular: {
+    style: [['font-weight', 400]],
+  },
+  medium: {
+    style: [['font-weight', 500]],
+  },
+  semibold: {
+    style: [['font-weight', 600]],
+  },
+  bold: {
+    style: [['font-weight', 700]],
+  },
+  extrabold: {
+    style: [['font-weight', 800]],
+  },
+  black: {
+    style: [['font-weight', 900]],
+  },
   text: {
     prop: [
       ['length', 'font-size'],
@@ -1279,11 +1309,21 @@ const font_weights = {
   extralight: 200,
   light: 300,
   normal: 400,
+  regular: 400,
   medium: 500,
   semibold: 600,
   bold: 700,
   extrabold: 800,
   black: 900,
+  100: 100,
+  200: 200,
+  300: 300,
+  400: 400,
+  500: 500,
+  600: 600,
+  700: 700,
+  800: 800,
+  900: 900,
 }
 
 const lengths = {
@@ -1349,6 +1389,23 @@ export function style(theme) {
     }
   }
 
+  theme.palette ??= {}
+  theme.palette.white = `oklch(100% 0.00 90.00)`
+  theme.palette.black = `oklch(0% 0.00 0.00)`
+  theme.palette.transparent = `transparent`
+
+  let design_tokens = {}
+
+  function traverse(obj, prefix = '') {
+    for (const [k, v] of entries(obj)) {
+      if (is_value(v)) {
+        design_tokens[extend_prefix(prefix, k)] = v
+      } else {
+        traverse(v, extend_prefix(prefix, k))
+      }
+    }
+  }
+
   function is_value(leaf) {
     if (is(leaf, 'number') || is(leaf, 'string')) {
       return true
@@ -1383,18 +1440,6 @@ export function style(theme) {
     }
 
     return false
-  }
-
-  let design_tokens = {}
-
-  function traverse(obj, prefix = '') {
-    for (const [k, v] of entries(obj)) {
-      if (is_value(v)) {
-        design_tokens[extend_prefix(prefix, k)] = v
-      } else {
-        traverse(v, extend_prefix(prefix, k))
-      }
-    }
   }
 
   // strip consecutive duplicate keys, e.g. color-red-red -> color-red
@@ -1510,22 +1555,33 @@ export function style(theme) {
 
   for (const [component, elements] of entries(components)) {
     for (const [selectors, utility_classes] of entries(elements)) {
-      for (let element of selectors.split(',')) {
-        element = element.trim()
+      if (selectors.startsWith('& ')) {
+        let selector = `:is(.${component}_${component}, .${component}) :is(${selectors.slice(
+          2,
+        )})`
 
-        // todo
-        let selector = `.${component}_${element}`
-        if (is_component_container_itself()) {
-          selector += `, .${element}`
-        }
-        // if (component == element) {
-        //   selector += `, .${component}`
-        // }
+        apply_utils(selector, utility_classes)
+      } else {
+        let selector = map(selectors.split(','), (target) => {
+          target = target.trim()
 
-        function is_component_container_itself() {
-          return component == element || element.startsWith(component)
-        }
+          let elements = map(target.split(' '), (element) => {
+            if (target.startsWith(component)) {
+              return `:is(.${component}_${element}, .${element})`
+            } else {
+              return `.${component}_${element}`
+            }
+          })
 
+          let selector = elements.join(' ')
+
+          return selector
+        }).join(', ')
+
+        apply_utils(selector, utility_classes)
+      }
+
+      function apply_utils(selector: string, utility_classes) {
         // todo
         let utilities = utility_classes.split(' ')
 
@@ -1688,9 +1744,16 @@ export function style(theme) {
 
   let css = ''
 
-  function append_css(selector, prop, value) {
-    css += `${selector} { ${prop}: ${value} }\n`
+  function append_css(selector, props) {
+    css += `${selector} {\n`
+    for (const [prop, value] of entries(props)) {
+      css += `  ${prop}: ${value};\n`
+    }
+    css += `}\n\n`
   }
+  // function append_css(selector, prop, value) {
+  //   css += `${selector} { ${prop}: ${value} }\n`
+  // }
 
   for (const [k, v] of entries(design_tokens)) {
     if (!has(references, k)) {
@@ -1722,17 +1785,20 @@ export function style(theme) {
           selector += `, :root`
         }
 
-        append_css(selector, css_variable_definition(k), value)
+        append_style(selector, css_variable_definition(k), value)
+        // append_css(selector, css_variable_definition(k), value)
       }
     } else {
-      append_css(':root', css_variable_definition(k), v)
+      append_style(':root', css_variable_definition(k), v)
+      // append_css(':root', css_variable_definition(k), v)
     }
   }
 
-  for (const [selector, pairs] of entries(styles)) {
-    for (const [prop, value] of entries(pairs)) {
-      append_css(selector, prop, value)
-    }
+  for (const [selector, props] of entries(styles)) {
+    append_css(selector, props)
+    // for (const [prop, value] of entries(pairs)) {
+    //   append_css(selector, prop, value)
+    // }
   }
 
   function css_variable(k) {

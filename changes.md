@@ -73,3 +73,46 @@ change
 
 - generation: + request params
 
+## 13
+
+- web/style: + `& css selector`
+  - so you can style rendered md articles
+    - you may write `& .foo, .bar, .asdf`
+    - they will all belong to `&`
+  - `&selectors` isnt supported, better to make it cleaner
+- web/use keyboard: + function when option
+- web/style: + first class font weights, support numerical font weights, `regular` (alias of `normal`)
+  - no idea why italic is first class while bold isnt
+  - i dont care how css or tailwind thinks or traditionally defines
+- web/react: fix state is a snapshot
+  - use js variable instead
+  - web/state, which runs outside fn and doesnt rely on react use state, doesnt have to change
+- web/react: + use_debug
+- web/clipboard: alias(rename) `init_clipboard` as `hook_after_copy`
+
+---
+
+web/style: handle parent selector, e.g. `content:hover copy` instead of `content:hover .message_copy`
+
+chances are you want explict inline attr (e.g. variants) for strict component scoping.
+
+chances are you want css pseudo classes like hover states out of box.
+
+it only leaks when a component nests itself, which is rarely the case.
+
+i may like `copy:has(content:hover)` to signal what's being styled first, though that would makes things way more complex.
+
+---
+
+- web/style: produce cleaner css by merging utils of the same selector into one
+
+it's not really faster to join an array of strings than string add.
+
+<!-- maybe i missed sth from nickel angel discussion tg group, if i remembered -->
+
+14
+
+- time: do not floor milisec timestamp
+  - clearly such abstraction leaks
+  - and you dont have to use perf api
+- web/style: hardcode white black and transparent into palette

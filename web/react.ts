@@ -13,11 +13,14 @@ export * from 'lib/web/use variants'
 export * from 'lib/web/use event'
 export * from 'lib/web/use mouse glitch'
 
-export const use_ref = useRef
+export function use_ref(initial_value?: any) {
+  return useRef(initial_value)
+}
 
 export function use_state<T>(
   initial_value?: T,
 ): [state: T, set_state: typeof set_state] {
+  const current_state = use_ref(initial_value)
   const [state, _set_state] = useState(initial_value)
   const update = use_update()
 
@@ -36,13 +39,11 @@ export function use_state<T>(
       ;[new_value] = args
     }
 
-    let prev_state = state
-
     if (is(new_value, 'function')) {
       new_value = new_value(state)
     }
 
-    if (is(new_value, 'literal') && new_value == prev_state) {
+    if (is(new_value, 'literal') && new_value == current_state.current) {
       return
     }
 
@@ -52,6 +53,7 @@ export function use_state<T>(
     }
 
     if (!is(new_value, 'undefined')) {
+      current_state.current = new_value
       _set_state(new_value)
     }
     update()
@@ -61,9 +63,9 @@ export function use_state<T>(
 }
 
 function use_update() {
-  const [, update] = useState(false)
+  const [, update] = useState(0)
 
-  return () => update((v) => !v)
+  return () => update((v) => v + 1)
 }
 
 function toggle(v: boolean) {
@@ -117,6 +119,12 @@ function normalize_deps(deps?: any[]) {
   }
 }
 
+export function use_debug(...args) {
+  use_effect(() => {
+    log(...args)
+  }, [args])
+}
+
 export function set_timeout(fn: fn, delay: number) {
   const timer = setTimeout(fn, delay)
 
@@ -155,6 +163,7 @@ type use_state = typeof use_state
 type use_effect = typeof use_effect
 type use_mount = typeof use_mount
 type use_layout_effect = typeof use_layout_effect
+type use_debug = typeof use_debug
 type set_timeout = typeof set_timeout
 type set_interval = typeof set_interval
 type listen = typeof listen
@@ -170,6 +179,7 @@ declare global {
   var use_effect: use_effect
   var use_mount: use_mount
   var use_layout_effect: use_layout_effect
+  var use_debug: use_debug
   var set_timeout: set_timeout
   var set_interval: set_interval
   var listen: listen

@@ -6,7 +6,8 @@ type use_keyboard = Partial<{
   stop_propagation: boolean
   global: boolean
   priority: number
-  when: boolean
+  when: boolean | fn
+  // when: boolean | ((...args: any) => boolean)
 }>
 
 /**
@@ -24,11 +25,15 @@ export function use_keyboard(shortcut: string, action: (event: KeyboardEvent) =>
   } = options
 
   useEffect(() => {
-    if (!when) {
+    if (is(when, 'boolean') && !when) {
       return
     }
-
+    
     const shortcutid = bind(shortcut, (e) => {
+      if (is(when, 'function') && !when()) {
+        return
+      }
+
       prevent_default && e.preventDefault?.()
       stop_propagation && e.stopPropagation?.()
 
