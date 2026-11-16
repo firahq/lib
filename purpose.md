@@ -680,3 +680,34 @@ really, it's prone when you forget to "update lib".
 
 > do not work at late night
 
+16
+
+for some reason, ts highlights `_set_state` as if it's referenced.
+
+```
+  const [state, _set_state] = useState(initial_value)
+```
+
+but not `a_set_state`
+
+```
+  const [state, a_set_state] = useState(initial_value)
+```
+
+# nov 2026
+
+## 16
+
+time.
+
+generally you dont need such high precision.
+
+it has tradeoff. it can drift over time it seems.
+
+be simple.
+
+---
+
+well, though you may not have it strictly better, you may have a separate monotonic time.
+
+
