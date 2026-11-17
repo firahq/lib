@@ -110,7 +110,8 @@ export function merge(target: object, ...sources: object[]) {
 type variable_type =
   | 'undefined'
   | 'nil' // nil | not a number
-  | 'nullish'
+  | 'absent'
+  | 'present'
   | 'array'
   | 'string'
   | 'number'
@@ -133,14 +134,16 @@ type variable_type =
  */
 export function is(v: any, ...type: variable_type[]): bool {
   return type.some((type) => {
-    if (type == 'nullish') {
+    if (type == 'absent') {
       return is(v, 'nil', 'undefined')
+    } else if (type == 'present') {
+      return !is(v, 'absent')
     } else if (type == 'numeric') {
       return is(v, 'number', 'bigint')
     } else if (type == 'iterable') {
-      return is(v[Symbol.iterator], 'function') && !is(v, 'string')
+      return is(v?.[Symbol.iterator], 'function') && !is(v, 'string')
     } else if (type == 'literal') {
-      return is(v, 'nullish', 'boolean', 'numeric', 'string', 'symbol')
+      return is(v, 'absent', 'boolean', 'numeric', 'string', 'symbol')
     } else if (typeof type == 'function') {
       return v instanceof type
     } else {
@@ -231,7 +234,7 @@ export function obj(v) {
 
 type nil_ = typeof nil
 type variable = typeof variable
-type is_given = typeof is_given
+// type is_given = typeof is_given
 type has = typeof has
 type entries_fn = typeof entries
 type merge = typeof merge
@@ -250,7 +253,7 @@ declare global {
   var nil: nil_
   type bool = boolean
   var variable: variable
-  var is_given: is_given
+  // var is_given: is_given
   var has: has
   var entries: entries_fn
   var merge: merge

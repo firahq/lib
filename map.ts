@@ -3,11 +3,13 @@ export function halt(value: any) {
   return { [halt_symbol]: true, value }
 }
 
-type entry = [key: any, value: any]
+type pair<K = any, V = any> = [key: K, value: V]
 
 export function map<T>(items: T[], fn: (item: T, index: number, array: T[]) => any): any[]
-export function map(items: Map<any, any>, fn: (item: entry, index: number, array: entry[]) => any): any[]
-export function map(items: object, fn: (item: entry, index: number, array: entry[]) => any): any[]
+export function map<K, V>(items: Map<K, V>, fn: (item: pair<K, V>, index: number, array: pair<K, V>[]) => any): any[]
+export function map<T>(items: Set<T>, fn: (item: T[], index: number, array: T[]) => any): any[]
+export function map<K extends Key, V>(items: Record<K, V>, fn: (item: pair<K, V>, index: number, array: pair<K, V>[]) => any): any[]
+// export function map(items: any, fn: (item: any, index: number, array: any[]) => any): any[]
 
 /**
  * Map an array to a fn
@@ -19,6 +21,7 @@ export function map(items: object, fn: (item: entry, index: number, array: entry
  * auto convert to entries for objects
  */
 export function map(items: any, fn: (item: any, index: number, array: any[]) => any) {
+// export function map(items: any, fn: (item: any, index: number, array: any[]) => any) {
   if (is(items, Map)) {
     items = Array.from(items.entries())
   } else if (is(items, Set)) {
