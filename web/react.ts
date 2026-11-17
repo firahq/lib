@@ -43,6 +43,7 @@ export function use_state<T>(
       ;[new_value] = args
     }
 
+    log(new_value)
     if (is(new_value, 'function')) {
       new_value = new_value(current_state.current)
     }
