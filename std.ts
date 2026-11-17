@@ -8,6 +8,12 @@ export function call(fn: fn) {
   fn?.()
 }
 
+export function pipe(...args) {
+  return (fn: fn) => {
+    fn(...args)
+  }
+}
+
 export function is_given<T>(foo: T): foo is NonNullable<T> {
   const missing_symbol = Symbol('missing')
 
