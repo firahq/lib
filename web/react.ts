@@ -43,25 +43,16 @@ export function use_state<T>(
       ;[new_value] = args
     }
 
-    log(new_value, `is(new_value, 'function')`, is(new_value, 'function'))
     if (is(new_value, 'function')) {
       new_value = new_value(current_state.current)
     }
 
-    log(
-      new_value,
-      `is(new_value, 'literal') && new_value == current_state.current`,
-      is(new_value, 'literal') && new_value == current_state.current,
-    )
     if (is(new_value, 'literal') && new_value == current_state.current) {
       return
     }
 
-    log(new_value, `is(new_value, Promise)`, is(new_value, Promise))
     if (is(new_value, Promise)) {
       new_value.then((v) => {
-        log('then', v)
-
         set_state(v)
       })
       return
