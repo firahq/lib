@@ -241,6 +241,7 @@ export function obj(v) {
 
 type identity = typeof identity
 type call = typeof call
+type pipe = typeof pipe
 type nil_ = typeof nil
 // type is_given = typeof is_given
 type has = typeof has
@@ -257,8 +258,9 @@ type set = typeof set
 type dict = typeof dict
 type obj = typeof obj
 declare global {
-  var call: call
   var identity: identity
+  var call: call
+  var pipe: pipe
   type nil = typeof nil
   var nil: nil_
   type bool = boolean
