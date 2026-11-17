@@ -52,7 +52,11 @@ export function use_state<T>(
     }
 
     if (is(new_value, Promise)) {
-      new_value.then(set_state)
+      new_value.then((v) => {
+        log('then', v)
+
+        set_state(v)
+      })
       return
     }
 
