@@ -62,8 +62,8 @@ export function use_state<T>(
       current_state.current = new_value
     }
 
+    log(current_state.current)
     if (should_rerender) {
-      log(current_state.current)
       update()
     }
   }
