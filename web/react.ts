@@ -63,6 +63,7 @@ export function use_state<T>(
     }
 
     if (should_rerender) {
+      log(current_state.current)
       update()
     }
   }
