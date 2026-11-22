@@ -97,7 +97,5 @@ export function p<T>(props: T): T {
     }
   }
 
-  log(converted_props)
-
   return converted_props
 }
