@@ -21,6 +21,18 @@ export function use_ref<T>(initial_value?: T) {
   return ref
 }
 
+export function forward(...refs) {
+  return (value) => {
+    map(refs, (ref) => {
+      if (is(ref, 'function')) {
+        ref(value)
+      } else if (is(ref, 'object')) {
+        ref.current = value
+      }
+    })
+  }
+}
+
 export function use_state<T>(
   initial_value?: T,
 ): [state: T, set_state: typeof set_state] {
@@ -178,6 +190,7 @@ type use_window_active = typeof use_window_active
 type use_variants = typeof use_variants
 type use_event = typeof use_event
 type use_mouse_glitch = typeof use_mouse_glitch
+type forward = typeof forward
 declare global {
   var use_ref: use_ref
   var use_state: use_state
@@ -194,4 +207,5 @@ declare global {
   var use_variants: use_variants
   var use_event: use_event
   var use_mouse_glitch: use_mouse_glitch
+  var forward: forward
 }
