@@ -20,7 +20,9 @@ export function p<T>(props: T): T {
       converted_props.style = parse_style(value)
     } else if (key == 'set_value') {
       let set_value = value
+      log('foo')
       converted_props.onChange = (event) => {
+        log('bar')
         set_value(event.target.value)
       }
     } else {
