@@ -21,6 +21,7 @@ export function p<T>(props: T): T {
     } else if (key == 'set_value') {
       let set_value = value
       converted_props.onChange = (event) => {
+        log('set_value')
         set_value(event.target.value)
       }
     } else {
