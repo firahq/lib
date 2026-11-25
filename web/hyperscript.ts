@@ -16,14 +16,14 @@ export function h(tag: string, ...children: any[])
 export function h(...args) {
   let { flexible_tag, props, children } = parse_hyperscript(...args)
 
-  log(flexible_tag, props, children)
-
   let tag
   if (is(flexible_tag, 'string')) {
     props = p(props)
 
     const { tag: parsed_tag, classname: parsed_classname } =
       parse_tag(flexible_tag)
+
+    log(parsed_tag, parsed_classname)
 
     tag = parsed_tag
 
