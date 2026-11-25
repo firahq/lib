@@ -23,8 +23,6 @@ export function h(...args) {
     const { tag: parsed_tag, classname: parsed_classname } =
       parse_tag(flexible_tag)
 
-    log(parsed_tag, parsed_classname)
-
     tag = parsed_tag
 
     props.className = [props.className, parsed_classname]
@@ -34,6 +32,8 @@ export function h(...args) {
     // component
     tag = flexible_tag
   }
+
+  log(typeof tag, tag, props, children)
 
   return createElement(tag, props, ...children)
 }
