@@ -9,6 +9,8 @@ import parse_style from 'style-to-js'
 export function p<T>(props: T): T {
   const converted_props: any = {}
 
+  log('hi')
+
   for (const [key, value] of entries(props)) {
     if (key == 'class' || key == 'className' || key == 'classname') {
       if (is(value, 'array')) {
