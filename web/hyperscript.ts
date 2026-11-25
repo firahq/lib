@@ -16,6 +16,8 @@ export function h(tag: string, ...children: any[])
 export function h(...args) {
   let { flexible_tag, props, children } = parse_hyperscript(...args)
 
+  log(flexible_tag, props, children)
+
   let tag
   if (is(flexible_tag, 'string')) {
     props = p(props)
@@ -52,7 +54,7 @@ function is_plain_object(v) {
   return is(v, 'object') && !has(v, '$$typeof')
 }
 
-function parse_tag(s) {
+function parse_tag(s: string) {
   if (s == '') {
     return { tag: Fragment, classname: '' }
   }
