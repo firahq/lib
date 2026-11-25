@@ -1,10 +1,5 @@
 import { format, now } from 'lib/time'
 
-type log = typeof log
-declare global {
-  var log: log
-}
-
 /**
  * Alias console.log as log
  *
@@ -28,3 +23,11 @@ function log_time() {
   return format(now())
   // return format(now(), '%F %T%:z')
 }
+
+type log = typeof log
+type warn = typeof warn
+declare global {
+  var log: log
+  var warn: warn
+}
+
