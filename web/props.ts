@@ -9,8 +9,6 @@ import parse_style from 'style-to-js'
 export function p<T>(props: T): T {
   const converted_props: any = {}
 
-  log('hi')
-
   for (const [key, value] of entries(props)) {
     if (key == 'class' || key == 'className' || key == 'classname') {
       if (is(value, 'array')) {
@@ -22,9 +20,7 @@ export function p<T>(props: T): T {
       converted_props.style = parse_style(value)
     } else if (key == 'set_value') {
       let set_value = value
-      log('foo')
       converted_props.onChange = (event) => {
-        log('bar')
         set_value(event.target.value)
       }
     } else {
