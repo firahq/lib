@@ -33,20 +33,30 @@ export function h(...args) {
     tag = flexible_tag
   }
 
-  log(typeof tag, tag, props, children)
-
   return createElement(tag, props, ...children)
 }
 
 function parse_hyperscript(...args) {
-  if (is_plain_object(args[1])) {
-    const [flexible_tag, props, ...children] = args
+  if (is(args[0], 'string', 'function')) {
+    if (is_plain_object(args[1])) {
+      const [flexible_tag, props, ...children] = args
 
-    return { flexible_tag, props, children }
+      return { flexible_tag, props, children }
+    } else {
+      const [flexible_tag, ...children] = args
+
+      return { flexible_tag, props: {}, children }
+    }
   } else {
-    const [flexible_tag, ...children] = args
+    if (is_plain_object(args[0])) {
+      const [props, ...children] = args
 
-    return { flexible_tag, props: {}, children }
+      return { flexible_tag: '', props, children }
+    } else {
+      const [...children] = args
+
+      return { flexible_tag: '', props: {}, children }
+    }
   }
 }
 
