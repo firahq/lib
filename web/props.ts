@@ -1,98 +1,43 @@
 import clsx from 'clsx'
-import parse from 'style-to-js'
-
-function kebab_to_camel(str: string): string {
-  let result = ''
-  let capitalize_next = false
-
-  for (let i = 0; i < str.length; i++) {
-    const char = str[i]
-
-    if (char == '-') {
-      capitalize_next = true
-    } else {
-      if (capitalize_next) {
-        result += char.toUpperCase()
-        capitalize_next = false
-      } else {
-        result += char
-      }
-    }
-  }
-
-  return result
-}
-
-let caches = dict()
-
-function cache(k, v) {
-  if (has(caches, k)) {
-    return caches.get(k)
-  } else {
-    caches.set(k, v)
-    return v
-  }
-}
+import parse_style from 'style-to-js'
 
 /**
- * Write react props flexibly
+ * Write flexible attrs on html tags for react
  *
  * idempotent
  */
 export function p<T>(props: T): T {
-  if (typeof props != 'object') {
-    return {}
-  }
-
-  // export function p<Tag extends keyof React.JSX.IntrinsicElements>(
-  //   props: RelaxedProps<React.JSX.IntrinsicElements[Tag]>
-  // ): any {
-  const converted_props = {}
-  // const converted_props: RelaxedProps<React.JSX.IntrinsicElements[Tag]> = {}
+  const converted_props: any = {}
 
   for (const [key, value] of Object.entries(props)) {
-    if (key == 'class' || key == 'className') {
+    if (key == 'class' || key == 'className' || key == 'classname') {
       if (is(value, 'array')) {
-        converted_props.className = clsx(...value)
+        converted_props.className = clsx(converted_props.className, ...value)
       } else {
-        converted_props.className = clsx(value)
+        converted_props.className = clsx(converted_props.className, value)
       }
     } else if (key == 'style' && typeof value == 'string') {
-      // assume style couldnt map to an array
-
-      converted_props.style = parse(value)
-    } else if (key == 'html') {
-      converted_props.dangerouslySetInnerHTML = cache(value, { __html: value })
+      converted_props.style = parse_style(value)
     } else {
-      if (key.startsWith('data-') || key.startsWith('aria-')) {
-        converted_props[key] = value
-      } else if (key.startsWith('on_')) {
-        const normalized_key =
-          key.slice(0, 2) + key[3].toUpperCase() + key.slice(4)
-        converted_props[normalized_key] = value
-      } else if (key.startsWith('on')) {
+      if (key.startsWith('on')) {
         const normalized_key =
           key.slice(0, 2) + key[2].toUpperCase() + key.slice(3)
         converted_props[normalized_key] = value
       } else {
-        // converted_props[key] = value
-
-        const normalized_key = kebab_to_camel(key)
-
         if (is(value, 'boolean')) {
           if (value == true) {
-            converted_props[normalized_key] = 'true'
-            // converted_props[normalized_key] = "t"
-            // converted_props[normalized_key] = true
+            converted_props[key] = key
+            // converted_props[key] = 't'
+            // converted_props[key] = 'true'
           } else {
-            converted_props[normalized_key] = nil
-            // converted_props[normalized_key] = false
-            // continue
+            // omit such attr
+            // converted_props[key] = nil
           }
-        } else {
-          converted_props[normalized_key] = value
+
+          continue
         }
-        // converted_props[normalized_key] = value
+        
+        converted_props[key] = value
       }
     }
   }
