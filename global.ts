@@ -24,7 +24,6 @@ import * as handle from 'lib/handle'
 use(handle)
 
 import * as map from 'lib/map'
-use(union)
 use(map)
 
 import * as chainable from 'lib/chainable'
