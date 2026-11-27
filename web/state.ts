@@ -104,16 +104,16 @@ export function s<T>(initial_value: T, options: s<T> = {}) {
     }
   }
 
-  function use_state_key<K extends keyof T>(
+  function use_state_key<K, V>(
     key: K,
-    fallback_value?,
+    fallback_value?: V,
   ): [
-    state: T[K],
+    state: V,
     set_state: (
       new_value?:
-        | T[K]
-        | Promise<T[K]>
-        | ((old_value: T[K]) => T[K] | Promise<T[K]> | void | Promise<void>),
+        | V
+        | Promise<V>
+        | ((old_value: V) => V | Promise<V> | void | Promise<void>),
     ) => void,
   ] {
     const update = use_update()
