@@ -201,3 +201,11 @@ it's not really faster to join an array of strings than string add.
   - you couldnt define stuff in kebab case anyway. would be more reasonable for snake case.
 - web/hyperscript: refactor code. make behavior more predictable and self explanable. only support actual use cases.
 - map: move to `collection`
+
+## 27
+
+- web/state: + `use_global.key(key, fallback_value)`
+  - one level nesting at most
+  - doesnt initialize when non existing, just resolve to fallback
+
+
