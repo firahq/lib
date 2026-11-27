@@ -106,7 +106,7 @@ export function s<T>(initial_value: T, options: s<T> = {}) {
 
   function use_state_key<K extends keyof T>(
     key: K,
-    fallback_value,
+    fallback_value?,
   ): [
     state: T[K],
     set_state: (
